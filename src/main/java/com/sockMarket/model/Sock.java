@@ -1,5 +1,7 @@
 package com.sockMarket.model;
 
+import com.sockMarket.model.enums.Color;
+import com.sockMarket.model.enums.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,9 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Sock {
 
-    private String color;
+    private Color color;
 
-    private int size;
+    private Size size;
 
     private int cottonPart;
 
