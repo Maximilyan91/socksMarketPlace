@@ -1,6 +1,9 @@
 package com.sockMarket.model.enums;
 
-public enum Colors {
+import lombok.Getter;
+
+@Getter
+public enum Color {
 
     WHITE("белый"),
     BLACK("черный"),
@@ -12,11 +15,7 @@ public enum Colors {
 
     private final String name;
 
-    Colors(String name) {
+    Color(String name) {
         this.name = name;
-    }
-
-    public String getName() {
-        return name;
     }
 }
