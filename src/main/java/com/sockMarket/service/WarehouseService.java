@@ -1,4 +1,4 @@
-package com.sockMarket.service.impl;
+package com.sockMarket.service;
 
 public interface WarehouseService {
 }
