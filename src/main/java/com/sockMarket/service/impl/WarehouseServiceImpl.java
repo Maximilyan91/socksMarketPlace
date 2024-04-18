@@ -17,8 +17,14 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     private final static TreeMap<Color, Map<Size, Sock>> socks = new TreeMap<>();
 
-    private Validation validation;
+    private final Validation validation;
 
+    public WarehouseServiceImpl(Validation validation) {
+        this.validation = validation;
+    }
+
+
+    @Override
     public TreeMap<Color, Map<Size, Sock>> addSocks(Sock sock) {
 
         if (!validation.validateSock(sock)) {
@@ -37,4 +43,11 @@ public class WarehouseServiceImpl implements WarehouseService {
         socks.put(color, oneColorSocks);
         return socks;
     }
+
+    @Override
+    public TreeMap<Color, Map<Size, Sock>> getAllSocks() {
+        return socks;
+    }
+
+
 }
