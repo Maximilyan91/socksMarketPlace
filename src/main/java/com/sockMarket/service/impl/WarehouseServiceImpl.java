@@ -1,14 +1,15 @@
 package com.sockMarket.service.impl;
 
+import com.sockMarket.exception.NegativeQuantityException;
 import com.sockMarket.exception.ValidationException;
 import com.sockMarket.model.Sock;
-import com.sockMarket.model.enums.Color;
-import com.sockMarket.model.enums.Size;
 import com.sockMarket.service.Validation;
 import com.sockMarket.service.WarehouseService;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class WarehouseServiceImpl implements WarehouseService {
@@ -48,5 +49,36 @@ public class WarehouseServiceImpl implements WarehouseService {
         return socks;
     }
 
+    @Override
+    public Sock releaseSocks(Sock sock) {
+        if (!validation.validateSock(sock)) {
+            throw new ValidationException(sock.toString());
+        }
 
+        if (!socks.contains(sock)) {
+            throw new NoSuchElementException("Таких носков на складе нет");
+        }
+
+        Sock sockFromList = socks.get(socks.indexOf(sock));
+        long newQuantity = sockFromList.getQuantity() - sock.getQuantity();
+
+        if (newQuantity < 0) {
+            throw new NegativeQuantityException(
+                    "Вы пытаетесь отгрузить носков больше чем осталось на складе: " + sockFromList.getQuantity());
+        }
+        sockFromList.setQuantity(newQuantity);
+        return sockFromList;
+    }
+
+    @Override
+    public Sock get(Sock sock) {
+        if (!validation.validateSock(sock)) {
+            throw new ValidationException(sock.toString());
+        }
+        if (!socks.contains(sock)) {
+            throw new NoSuchElementException("Таких носков на складе нет");
+        }
+
+        return socks.get(socks.indexOf(sock));
+    }
 }

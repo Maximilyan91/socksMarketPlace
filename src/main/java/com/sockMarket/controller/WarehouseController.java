@@ -1,19 +1,15 @@
 package com.sockMarket.controller;
 
+import com.sockMarket.exception.NegativeQuantityException;
 import com.sockMarket.model.Sock;
-import com.sockMarket.model.enums.Color;
-import com.sockMarket.model.enums.Size;
 import com.sockMarket.service.WarehouseService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("api/socks")
@@ -28,7 +24,19 @@ public class WarehouseController {
 
     @PostMapping
     public ResponseEntity<List<Sock>> addSocks(@RequestBody Sock sock) {
+
         service.addSocks(sock);
         return ResponseEntity.ok(service.getAllSocks());
+    }
+
+    @PutMapping
+    public ResponseEntity<Sock> releaseSocks(@RequestBody Sock sock) {
+        try {
+            service.releaseSocks(sock);
+        } catch (NoSuchElementException | NegativeQuantityException e) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+
+        return ResponseEntity.ok(service.get(sock));
     }
 }

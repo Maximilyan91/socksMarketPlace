@@ -12,4 +12,8 @@ public interface WarehouseService {
     List<Sock> addSocks(Sock sock);
 
     List<Sock> getAllSocks();
+
+    Sock releaseSocks(Sock sock);
+
+    Sock get(Sock sock);
 }
