@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -26,7 +27,7 @@ public class WarehouseController {
     }
 
     @PostMapping
-    public ResponseEntity<TreeMap<Color, Map<Size, Sock>>> addSocks(@RequestBody Sock sock) {
+    public ResponseEntity<List<Sock>> addSocks(@RequestBody Sock sock) {
         service.addSocks(sock);
         return ResponseEntity.ok(service.getAllSocks());
     }
