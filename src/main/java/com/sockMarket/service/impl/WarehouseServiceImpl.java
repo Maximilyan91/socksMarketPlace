@@ -8,14 +8,12 @@ import com.sockMarket.service.Validation;
 import com.sockMarket.service.WarehouseService;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 @Service
 public class WarehouseServiceImpl implements WarehouseService {
 
-    private final static TreeMap<Color, Map<Size, Sock>> socks = new TreeMap<>();
+    private final static List<Sock> socks = new ArrayList<>();
 
     private final Validation validation;
 
@@ -25,27 +23,28 @@ public class WarehouseServiceImpl implements WarehouseService {
 
 
     @Override
-    public TreeMap<Color, Map<Size, Sock>> addSocks(Sock sock) {
-
+    public List<Sock> addSocks(Sock sock) {
         if (!validation.validateSock(sock)) {
             throw new ValidationException(sock.toString());
         }
-        Color color = sock.getColor();
-        Map<Size, Sock> oneColorSocks = socks.getOrDefault(color, new LinkedHashMap<>());
-        Size size = sock.getSize();
 
-        if (oneColorSocks.containsKey(size)) {
-            long newQuantity = oneColorSocks.get(size).getQuantity() + sock.getQuantity();
-            oneColorSocks.get(size).setQuantity(newQuantity);
-        } else {
-            oneColorSocks.put(size, sock);
+        if (socks.isEmpty()) {
+            socks.add(sock);
+            return socks;
         }
-        socks.put(color, oneColorSocks);
+
+        if (socks.contains(sock)) {
+
+            Sock sockFromList = socks.get(socks.indexOf(sock));
+            sockFromList.setQuantity(sockFromList.getQuantity() + sock.getQuantity());
+        } else {
+            socks.add(sock);
+        }
         return socks;
     }
 
     @Override
-    public TreeMap<Color, Map<Size, Sock>> getAllSocks() {
+    public List<Sock> getAllSocks() {
         return socks;
     }
 
