@@ -29,15 +29,11 @@ public class WarehouseServiceImpl implements WarehouseService {
             throw new ValidationException(sock.toString());
         }
 
-        if (socks.isEmpty()) {
-            socks.add(sock);
-            return socks;
-        }
-
         if (socks.contains(sock)) {
 
             Sock sockFromList = socks.get(socks.indexOf(sock));
             sockFromList.setQuantity(sockFromList.getQuantity() + sock.getQuantity());
+
         } else {
             socks.add(sock);
         }
