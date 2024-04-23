@@ -4,11 +4,16 @@ import com.sockMarket.model.Sock;
 import com.sockMarket.model.enums.Color;
 import com.sockMarket.model.enums.Size;
 
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.List;
 
 public interface WarehouseService {
-    TreeMap<Color, Map<Size, Sock>> addSocks(Sock sock);
+    void addSocks(Sock sock);
 
-    TreeMap<Color, Map<Size, Sock>> getAllSocks();
+    List<Sock> getAllSocks();
+
+    Sock releaseSocks(Sock sock);
+
+    List<Sock> getByCotton(Color color, Size size, Integer cottonMin, Integer cottonMax);
+
+    Sock deleteSock(Sock sock);
 }
