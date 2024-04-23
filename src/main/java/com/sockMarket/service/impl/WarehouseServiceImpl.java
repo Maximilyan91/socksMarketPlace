@@ -63,6 +63,11 @@ public class WarehouseServiceImpl implements WarehouseService {
             throw new NegativeQuantityException(
                     "Вы пытаетесь отгрузить носков больше чем осталось на складе: " + sockFromList.getQuantity());
         }
+
+        if (newQuantity == 0) {
+            socks.remove(sockFromList);
+        }
+
         sockFromList.setQuantity(newQuantity);
         return sockFromList;
     }
@@ -86,5 +91,31 @@ public class WarehouseServiceImpl implements WarehouseService {
             }
         }
         return neededSocks;
+    }
+
+    @Override
+    public Sock deleteSock(Sock sock) {
+        if (!validation.validateSock(sock)) {
+            throw new ValidationException(sock.toString());
+        }
+
+        if (!socks.contains(sock)) {
+            throw new NoSuchElementException("Таких носков на складе нет");
+        }
+
+        Sock sockFromList = socks.get(socks.indexOf(sock));
+        long newQuantity = sockFromList.getQuantity() - sock.getQuantity();
+
+        if (newQuantity < 0) {
+            throw new NegativeQuantityException(
+                    "Вы пытаетесь отгрузить носков больше чем осталось на складе: " + sockFromList.getQuantity());
+        }
+
+        if (newQuantity == 0) {
+            socks.remove(sockFromList);
+        }
+
+        sockFromList.setQuantity(newQuantity);
+        return sockFromList;
     }
 }

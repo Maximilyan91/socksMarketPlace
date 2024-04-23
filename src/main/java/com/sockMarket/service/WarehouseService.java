@@ -14,4 +14,6 @@ public interface WarehouseService {
     Sock releaseSocks(Sock sock);
 
     List<Sock> getByCotton(Color color, Size size, Integer cottonMin, Integer cottonMax);
+
+    Sock deleteSock(Sock sock);
 }

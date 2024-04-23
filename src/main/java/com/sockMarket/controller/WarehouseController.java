@@ -54,10 +54,9 @@ public class WarehouseController {
     @GetMapping()
     @Operation(summary = "получение остатка носков на складе по заданным критериям")
     public ResponseEntity<List<Sock>> getByCotton(@RequestParam Color color,
-                                                     @RequestParam Size size,
-                                                     @RequestParam(required = false) Integer cottonMin,
-                                                     @RequestParam(required = false) Integer cottonMax) {
-
+                                                  @RequestParam Size size,
+                                                  @RequestParam(required = false) Integer cottonMin,
+                                                  @RequestParam(required = false) Integer cottonMax) {
 
         if (cottonMin == null) {
             cottonMin = 0;
@@ -74,6 +73,17 @@ public class WarehouseController {
             ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(socks);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<List<Sock>> deleteSock(@RequestBody Sock sock) {
+        try {
+            Sock remain = service.deleteSock(sock);
+            return ResponseEntity.ok(service.getAllSocks());
+
+        } catch (ValidationException | NegativeQuantityException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PostMapping("/all")
