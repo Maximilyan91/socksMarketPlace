@@ -5,15 +5,13 @@ import com.sockMarket.model.enums.Color;
 import com.sockMarket.model.enums.Size;
 
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 public interface WarehouseService {
-    List<Sock> addSocks(Sock sock);
+    void addSocks(Sock sock);
 
     List<Sock> getAllSocks();
 
     Sock releaseSocks(Sock sock);
 
-    Sock get(Sock sock);
+    List<Sock> getByCotton(Color color, Size size, Integer cottonMin, Integer cottonMax);
 }

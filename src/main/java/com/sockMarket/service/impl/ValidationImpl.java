@@ -9,8 +9,13 @@ public class ValidationImpl implements Validation {
     @Override
     public boolean validateSock(Sock sock) {
         return sock != null &&
-                sock.getCottonPart() >= 1 &&
-                sock.getCottonPart() <= 100 &&
-                sock.getQuantity() >= 1;
+                sock.getCottonPart() > 0 &&
+                sock.getCottonPart() < 101 &&
+                sock.getQuantity() > 0;
+    }
+
+    @Override
+    public boolean validateCottonPart(int min, int max) {
+        return min >= 0 && min <= 100 && max >= 0 && max <= 100 ;
     }
 }
