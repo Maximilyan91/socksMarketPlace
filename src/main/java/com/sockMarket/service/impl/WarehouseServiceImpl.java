@@ -5,6 +5,7 @@ import com.sockMarket.exception.ValidationException;
 import com.sockMarket.model.Sock;
 import com.sockMarket.model.enums.Color;
 import com.sockMarket.model.enums.Size;
+import com.sockMarket.service.FileService;
 import com.sockMarket.service.Validation;
 import com.sockMarket.service.WarehouseService;
 import org.springframework.stereotype.Service;
@@ -20,10 +21,12 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     private final Validation validation;
 
-    public WarehouseServiceImpl(Validation validation) {
-        this.validation = validation;
-    }
+    private final FileService fileService;
 
+    public WarehouseServiceImpl(Validation validation, FileService fileService) {
+        this.validation = validation;
+        this.fileService = fileService;
+    }
 
     @Override
     public void addSocks(Sock sock) {
@@ -38,6 +41,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 
         } else {
             socks.add(sock);
+            fileService.saveToFile(socks);
         }
     }
 
