@@ -3,13 +3,17 @@ package com.sockMarket.service.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sockMarket.model.Sock;
 import com.sockMarket.service.FileService;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+
+import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
 @Service
 public class FileServiceImpl implements FileService {
@@ -51,6 +55,21 @@ public class FileServiceImpl implements FileService {
         Path path = Path.of(dataFilePath, dataFileName);
         try {
             return Files.readString(path);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public File getDataFile() {
+        return new File(dataFilePath + "/" + dataFileName);
+    }
+
+    @Override
+    public boolean uploadDataFile(MultipartFile file) {
+
+        try (FileOutputStream fos = new FileOutputStream(getDataFile())){
+            IOUtils.copy(file.getInputStream(), fos);
+            return true;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

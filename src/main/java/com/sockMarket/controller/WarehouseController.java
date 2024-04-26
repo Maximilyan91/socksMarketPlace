@@ -5,11 +5,14 @@ import com.sockMarket.exception.ValidationException;
 import com.sockMarket.model.Sock;
 import com.sockMarket.model.enums.Color;
 import com.sockMarket.model.enums.Size;
+import com.sockMarket.service.FileService;
 import com.sockMarket.service.WarehouseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +23,11 @@ import java.util.List;
 public class WarehouseController {
 
     private final WarehouseService service;
+    private final FileService fileService;
 
-    public WarehouseController(WarehouseService service) {
+    public WarehouseController(WarehouseService service, FileService fileService) {
         this.service = service;
+        this.fileService = fileService;
     }
 
     @PostMapping
@@ -91,5 +96,15 @@ public class WarehouseController {
     public ResponseEntity<List<Sock>> postSocks(@RequestBody List<Sock> socks) {
         service.getAllSocks().addAll(socks);
         return ResponseEntity.ok(service.getAllSocks());
+    }
+
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "загрузка файла с носками")
+    public ResponseEntity<Void> uploadFIle(@RequestParam MultipartFile file) {
+        if (!fileService.uploadDataFile(file)) {
+            return ResponseEntity.internalServerError().build();
+        } else {
+            return ResponseEntity.ok().build();
+        }
     }
 }

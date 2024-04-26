@@ -130,6 +130,10 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Override
     public void readFromFile() {
         String json = fileService.readFromFile();
+
+        if (json.isEmpty()) {
+            return;
+        }
         try {
             socks = new ObjectMapper().readValue(json, new TypeReference<>() {
             });
