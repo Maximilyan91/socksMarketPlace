@@ -1,5 +1,8 @@
 package com.sockMarket.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sockMarket.exception.NegativeQuantityException;
 import com.sockMarket.exception.ValidationException;
 import com.sockMarket.model.Sock;
@@ -8,6 +11,7 @@ import com.sockMarket.model.enums.Size;
 import com.sockMarket.service.FileService;
 import com.sockMarket.service.Validation;
 import com.sockMarket.service.WarehouseService;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,7 +21,7 @@ import java.util.NoSuchElementException;
 @Service
 public class WarehouseServiceImpl implements WarehouseService {
 
-    private final static List<Sock> socks = new ArrayList<>();
+    private static List<Sock> socks = new ArrayList<>();
 
     private final Validation validation;
 
@@ -121,5 +125,21 @@ public class WarehouseServiceImpl implements WarehouseService {
 
         sockFromList.setQuantity(newQuantity);
         return sockFromList;
+    }
+
+    @Override
+    public void readFromFile() {
+        String json = fileService.readFromFile();
+        try {
+            socks = new ObjectMapper().readValue(json, new TypeReference<>() {
+            });
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @PostConstruct
+    private void init() {
+        readFromFile();
     }
 }

@@ -8,4 +8,6 @@ public interface FileService {
     void saveToFile(List<Sock> socks);
 
     void createFile();
+
+    String readFromFile();
 }
