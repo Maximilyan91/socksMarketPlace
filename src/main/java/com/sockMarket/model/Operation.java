@@ -11,6 +11,6 @@ import java.time.LocalDateTime;
 public class Operation {
 
     private OperationType type;
-    private LocalDateTime dateTime;
+    private String dateTime;
     private Sock sock;
 }

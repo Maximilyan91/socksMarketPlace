@@ -7,8 +7,10 @@ import com.sockMarket.exception.NegativeQuantityException;
 import com.sockMarket.exception.ValidationException;
 import com.sockMarket.model.Sock;
 import com.sockMarket.model.enums.Color;
+import com.sockMarket.model.enums.OperationType;
 import com.sockMarket.model.enums.Size;
 import com.sockMarket.service.FileService;
+import com.sockMarket.service.OperationService;
 import com.sockMarket.service.Validation;
 import com.sockMarket.service.WarehouseService;
 import jakarta.annotation.PostConstruct;
@@ -27,9 +29,12 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     private final FileService fileService;
 
-    public WarehouseServiceImpl(Validation validation, FileService fileService) {
+    private final OperationService operationService;
+
+    public WarehouseServiceImpl(Validation validation, FileService fileService, OperationService operationService) {
         this.validation = validation;
         this.fileService = fileService;
+        this.operationService = operationService;
     }
 
     @Override
@@ -45,6 +50,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 
         } else {
             socks.add(sock);
+            operationService.addOperation(sock, "ACCEPT");
             fileService.saveToFile(socks);
         }
     }
