@@ -9,11 +9,18 @@ import com.sockMarket.service.FileService;
 import com.sockMarket.service.WarehouseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,6 +88,7 @@ public class WarehouseController {
     }
 
     @DeleteMapping
+    @Operation(summary = "Списание носков со склада")
     public ResponseEntity<List<Sock>> deleteSock(@RequestBody Sock sock) {
         try {
             Sock remain = service.deleteSock(sock);
@@ -98,8 +106,28 @@ public class WarehouseController {
         return ResponseEntity.ok(service.getAllSocks());
     }
 
+    @GetMapping("/download")
+    @Operation(summary = "скачивание файла с данными по складу")
+    public ResponseEntity<InputStreamResource> downloadFile() {
+        File file = fileService.getDataFile();
+
+        try {
+            InputStreamResource resource = new InputStreamResource(Files.newInputStream(file.toPath()));
+            return ResponseEntity.
+                    ok().
+                    contentType(MediaType.APPLICATION_JSON).
+                    contentLength(file.length()).
+                    header(HttpHeaders.CONTENT_DISPOSITION, "attachment; " +
+                            "filename=\"Data file for " +
+                            LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy_HH.mm.ss")) + ".json\"").body(resource);
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError().build();
+        }
+
+    }
+
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation(summary = "загрузка файла с носками")
+    @Operation(summary = "загрузка на сервер файла с носками")
     public ResponseEntity<Void> uploadFIle(@RequestParam MultipartFile file) {
         if (!fileService.uploadDataFile(file)) {
             return ResponseEntity.internalServerError().build();

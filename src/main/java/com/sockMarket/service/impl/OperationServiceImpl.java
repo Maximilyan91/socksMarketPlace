@@ -50,7 +50,7 @@ public class OperationServiceImpl implements OperationService {
         }
 
         try {
-            operations = new ObjectMapper().readValue(json, new TypeReference<List<Operation>>() {
+            operations = new ObjectMapper().readValue(json, new TypeReference<>() {
                     }
             );
         } catch (JsonProcessingException e) {
